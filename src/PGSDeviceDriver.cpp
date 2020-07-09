@@ -29,6 +29,8 @@ PGSDeviceDriver::PGSDeviceDriver(){
 	if (m_serial.isOpen()) cout << "Yes." << endl;
 	else cout << "No." << endl;
 	m_service = nh.advertiseService("serial_command", &PGSDeviceDriver::command, this);
+	m_data_pub = nh.advertise<pgs_device_driver::ethanolsensor>("ethanol_data", 100);
+	m_timer = nh.createTimer(ros::Duration(0.1), &PGSDeviceDriver::readData, this);
 }
 
 PGSDeviceDriver::~PGSDeviceDriver(){}
@@ -64,3 +66,21 @@ string PGSDeviceDriver::findSerialCmd(float scalar){
 	}
 	return string(1,cmd);
 }
+
+void PGSDeviceDriver::readData(const ros::TimerEvent& event){
+	string buffer = m_serial.readline();
+	string::size_type n = buffer.find('@');
+	if (n == string::npos){
+		return;
+	}
+	else {
+		stringstream data(buffer.substr(n+1));
+		int num_data;
+		data >> num_data;
+		ethanolsensor sensor_data;
+		sensor_data.CH3CH2OH = num_data;
+		m_data_pub.publish(sensor_data);
+	}
+
+}
+

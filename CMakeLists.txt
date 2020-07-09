@@ -13,6 +13,11 @@ add_service_files(
    PGSCmd.srv
 )
 
+add_message_files(
+   FILES
+   ethanolsensor.msg
+)
+
 generate_messages(
    DEPENDENCIES
    std_msgs

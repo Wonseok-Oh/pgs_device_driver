@@ -9,10 +9,13 @@
 #define PGS_DEVICE_DRIVER_INCLUDE_PGS_DEVICE_DRIVER_PGSDEVICEDRIVER_H_
 #include <string>
 #include <ros/ros.h>
-#include "pgs_device_driver/PGSCmd.h"
-#include <serial/serial.h>
+#include "serial/serial.h"
 #include <cstdint>
 #include <cmath>
+
+#include "pgs_device_driver/PGSCmd.h"
+#include "pgs_device_driver/ethanolsensor.h"
+
 namespace pgs_device_driver {
 
 class PGSDeviceDriver {
@@ -22,10 +25,13 @@ public:
 	bool command(pgs_device_driver::PGSCmd::Request &req,
 			pgs_device_driver::PGSCmd::Response &res);
 	std::string findSerialCmd(float scalar);
+	void readData(const ros::TimerEvent& event);
 
 private:
 	serial::Serial m_serial;
 	ros::ServiceServer m_service;
+	ros::Publisher m_data_pub;
+	ros::Timer m_timer;
 };
 
 }
