@@ -24,7 +24,7 @@ PGSDeviceDriver::PGSDeviceDriver(){
  	m_serial.setPort(port);
  	m_serial.setBaudrate(baudrate);
  	m_serial.setTimeout(timeout_class);
-	m_serial.open();
+ 	m_serial.open();
 	cout << "Is the serial port open? ";
 	if (m_serial.isOpen()) cout << "Yes." << endl;
 	else cout << "No." << endl;
@@ -53,7 +53,10 @@ bool PGSDeviceDriver::command(PGSCmd::Request &req, PGSCmd::Response &res){
 string PGSDeviceDriver::findSerialCmd(float scalar){
 	float scalar10 = scalar * 10;
 	char cmd;
-	if (scalar10 != 10){
+	if (scalar10 <= 1){
+		cmd = static_cast<char>(PGSCmd::Response::P2);
+	}
+	else if (scalar10 != 10 && scalar10 > 1){
 		cmd = static_cast<char>(PGSCmd::Response::P2 + floor(scalar10)-1);
 	}
 	else {
