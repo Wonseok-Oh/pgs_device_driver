@@ -41,9 +41,11 @@ bool PGSDeviceDriver::command(PGSCmd::Request &req, PGSCmd::Response &res){
 	}
 	else if ((req.valve_on != 0 && req.valve_on != 1) || (req.scalar < 0) || (req.scalar > 1)){
 		ROS_ERROR("Command to PGS driver is invalid format. valve_on: 0 or 1, scalar: float on the interval [0,1]");
+		res.serial_cmd = string("");
 		return false;
 	}
 	string cmd = to_string(res.VALVE_OPEN)+findSerialCmd(req.scalar);
+	res.serial_cmd = cmd;
 	m_serial.write(cmd);
 	return true;
 }
