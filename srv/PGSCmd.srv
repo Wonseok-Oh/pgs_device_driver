@@ -4,5 +4,5 @@ float64 scalar
 string serial_cmd
 int8 RESET = 0
 int8 VALVE_OPEN = 3
-int8 num_interval = 9
+int8 num_interval = 10
 uint8 P2 = 97
